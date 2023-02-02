@@ -1,0 +1,38 @@
+{
+  "ver": "2.3.7",
+  "uuid": "06504236-7269-4a80-b2b1-1d39ac01f2d3",
+  "importer": "texture",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "width": 148,
+  "height": 270,
+  "platformSettings": {},
+  "subMetas": {
+    "twoplayers-sheet0": {
+      "ver": "1.0.6",
+      "uuid": "12848680-974f-4c21-8a7d-dd134ee3043b",
+      "importer": "sprite-frame",
+      "rawTextureUuid": "06504236-7269-4a80-b2b1-1d39ac01f2d3",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 2,
+      "offsetY": -1.5,
+      "trimX": 10,
+      "trimY": 7,
+      "width": 132,
+      "height": 259,
+      "rawWidth": 148,
+      "rawHeight": 270,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

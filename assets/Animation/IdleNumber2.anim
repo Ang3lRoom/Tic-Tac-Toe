@@ -1,0 +1,39 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "IdleNumber2",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "width": [
+        {
+          "frame": 0,
+          "value": 114.3
+        }
+      ],
+      "height": [
+        {
+          "frame": 0,
+          "value": 261.2
+        }
+      ],
+      "position": [
+        {
+          "frame": 0,
+          "value": [
+            -350.7,
+            855.8000000000004,
+            0
+          ]
+        }
+      ],
+      "anchorY": [],
+      "anchorX": []
+    }
+  },
+  "events": []
+}
