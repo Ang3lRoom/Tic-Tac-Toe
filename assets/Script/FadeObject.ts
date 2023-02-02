@@ -1,5 +1,5 @@
 const {ccclass, property} = cc._decorator;
-// 👇️ named export
+
 @ccclass
 export default class FadeObject extends cc.Component {
 
@@ -12,7 +12,6 @@ export default class FadeObject extends cc.Component {
     @property(cc.Sprite)
     protected hashtag: cc.Sprite;
 
-
     @property(cc.Node)
 	objectLeftUI: cc.Node = null
     @property(cc.Node)
@@ -21,7 +20,7 @@ export default class FadeObject extends cc.Component {
     
     sleep(seconds: number) {
         return new Promise((resole) => setTimeout(resole, seconds * 1000));
-     }
+    }
      
     async startCountDownAsync() {
         await this.sleep(.5);
@@ -48,10 +47,6 @@ export default class FadeObject extends cc.Component {
 
     public loaadTransition() {
 		this.startCountDownAsync();
-	}
-
-    public resetPos() {
-        
 	}
 
     testNewCocos() {

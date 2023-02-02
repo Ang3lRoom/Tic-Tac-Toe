@@ -1,14 +1,9 @@
-import setCanvasScaleMode from "./setCanvasScaleMode";
-import Slot from "./Slot";
-import Audio from "./Audio";
 import FadeObject from "./FadeObject";
 
 const {ccclass, property} = cc._decorator;
 
-
 let haveIt = [];
-const countries = [];
-const    haveIt2 = [];
+const haveIt2 = [];
 let haveIt3;
 
 @ccclass
@@ -16,30 +11,16 @@ export default class Board extends cc.Component {
 
     @property(cc.Node)
     protected slotRef: cc.Node[] = [];
-
-    @property(cc.Node)
-    slots: cc.Node;
-
     @property({type: cc.SpriteFrame})
     private xSprite : cc.SpriteFrame = null;
     @property({type: cc.SpriteFrame})
     private oSprite : cc.SpriteFrame = null;
-
     @property({type: cc.Sprite})
     private lineSprite : cc.Sprite = null;
-
     @property(cc.Sprite)
     protected tictacSprites: cc.Sprite[] = [];
-
-    @property(cc.Node)
-    nodes: cc.Node;
-
     @property(cc.Node)
     linePos: cc.Node = null;
-    
-
-    @property
-    linePosBool: string[] = [];
 
     @property(cc.Label)
     labelPlayer1: cc.Label = null;
@@ -53,6 +34,7 @@ export default class Board extends cc.Component {
     pointsPlayer1 = 0;
     pointsPlayer2 = 0;
     drawsPoints = 0;
+    touchedSlots = 0;
 
     @property
     winPlayer1: boolean;
@@ -61,14 +43,9 @@ export default class Board extends cc.Component {
     @property
     touchScreen: boolean = true;
     @property
-    reset: boolean;
-    @property
-    endGameBool: boolean;
-    @property
     isPlayer1: boolean = true;
     @property
     isPlayer2: boolean = false;
-    touchedSlots = 0;
 
     @property(cc.AudioSource)
     tocGameSound:  cc.AudioSource[] = [];
@@ -78,22 +55,6 @@ export default class Board extends cc.Component {
     @property(cc.Prefab)
     ballPrefab: cc.Prefab = null;
 
-    public TimeToLive = 5;
- 
-    registerForClick(){
-        this.unregisterForClick();
-        this.node.active = true;
-        this.node.on(cc.Node.EventType.MOUSE_DOWN, this.spaceClicked, this);
-    }
-
-    unregisterForClick(){
-        this.node.off(cc.Node.EventType.MOUSE_DOWN, this.spaceClicked, this);
-    }
-
-    spaceClicked(event: any){
-        this.unregisterForClick();
-        this.node.active = false;
-    }
     sleep(seconds: number) {
         return new Promise((resole) => setTimeout(resole, seconds * 1000));
     }
@@ -116,6 +77,9 @@ export default class Board extends cc.Component {
     player2Button(){
         this.isPlayer2 = true;
     }
+    player1Button(){
+        this.isPlayer2 = false;
+    }
 
     getRandomArbitrary(min:string, max) {
         if(!this.touchScreen)
@@ -123,21 +87,17 @@ export default class Board extends cc.Component {
         if (!this.isPlayer2) {
         var random = min;
         this.touchedSlots += 2;
-        console.log(this.touchedSlots + "slots");
         if(!haveIt.includes(random) && !this.slotRef[min].getComponent("Slot").isTouched && !this.winPlayer1) {
             haveIt.push(min);
             this.slotRef[min].getComponent(cc.Sprite).spriteFrame = this.oSprite;
             this.slotRef[min].getComponent("Slot").isTouched = true;
-            console.log(random + "Random1");
             haveIt2[min] = "O";
-            countries.unshift(random);
 
             const nono = (Math.random() * max).toFixed();
 
             if (!haveIt.includes(nono) && !this.slotRef[nono].getComponent("Slot").isTouched && !this.winPlayer1 ) {
                 haveIt.push(nono);
                 haveIt3 = nono;
-                console.log(nono+ "RandomNO");
                 this.slotRef[nono].getComponent(cc.Sprite).spriteFrame = this.xSprite;
                 this.slotRef[nono].getComponent("Slot").isTouched = true;
                 haveIt2[nono] = "X";
@@ -148,7 +108,6 @@ export default class Board extends cc.Component {
                     {
                         haveIt.push(index);
                         haveIt3 = index;
-                        console.log(index+ "RandomSI");
                         this.slotRef[index].getComponent(cc.Sprite).spriteFrame = this.xSprite;
                         this.slotRef[index].getComponent("Slot").isTouched = true;
                         this.tictac(index);
@@ -166,26 +125,20 @@ export default class Board extends cc.Component {
                 this.slotRef[min].getComponent(cc.Sprite).spriteFrame = this.oSprite;
                 this.slotRef[min].getComponent("Slot").isTouched = true;
                 haveIt2[min] = "O";
-                countries.unshift(random);
                 this.isPlayer1 = false;
-                console.log(haveIt2 + "Random1");
                 this.touchedSlots += 1;
             }
             if(!haveIt.includes(random) && !this.slotRef[min].getComponent("Slot").isTouched && !this.isPlayer1 && !this.winPlayer1) {
                 haveIt.push(min);
                 this.slotRef[min].getComponent(cc.Sprite).spriteFrame = this.xSprite;
                 this.slotRef[min].getComponent("Slot").isTouched = true;
-                countries.unshift(random);
+                haveIt2[min] = "X";
                 this.isPlayer1 = true;
-                console.log(haveIt2 + "Random2");
                 this.touchedSlots += 1;
             }
         }
-        console.log(this.winPlayer1 + "Randomwin");
-        
     }
   
-    //The server has responded with the grid indices and player that clicked
     clickOne(){
         if(!this.touchScreen) return;
         if (!this.slotRef[0].getComponent("Slot").isTouched) {
@@ -270,13 +223,24 @@ export default class Board extends cc.Component {
 
     tictac(val){
         this.tictacSprites[val].node.opacity = 0;
-       
         this.tictacSprites[val].node.runAction(cc.sequence(cc.delayTime(.1), cc.fadeIn(.3)));
     }
 
     protected update() {
 
         this.showLine();
+        if(this.isPlayer2)
+        {
+            if (this.winPlayer1 && !this.winPlayer2) {
+                
+                this.pointsPlayer1 += 1;
+                this.labelPlayer1.string =  this.pointsPlayer1.toString();
+                this.winSound.play();
+                this.fadeObj.resetAnimation();
+                this.fadeObj.loaadTransition();
+                this.endGame();
+            }
+        }
 
         if(this.touchedSlots > 8) 
         {
@@ -288,42 +252,35 @@ export default class Board extends cc.Component {
             this.lineSprite.node.runAction(cc.sequence(cc.delayTime(1), cc.fadeOut(.3)));
             this.winSound.play();
             this.fadeObj.resetAnimation();
-            this.fadeObj.resetPos();
             this.fadeObj.loaadTransition();
             }
             if(!this.winPlayer1 && !this.winPlayer2)
             {
             this.drawsPoints+=1;
             this.labelDraws.string =  this.drawsPoints.toString();
-            console.log(this.drawsPoints + "draws");
             }
             this.endGame();
         }
         if (this.winPlayer1 && !this.winPlayer2) {
             if(this.touchedSlots > 8) return;
             this.tictacSprites[haveIt3].node.runAction(cc.sequence(cc.delayTime(.1), cc.fadeOut(.3)));
-            console.log(haveIt3  + "nose");
             this.pointsPlayer1 += 1;
             this.labelPlayer1.string =  this.pointsPlayer1.toString();
             this.winSound.play();
             this.fadeObj.resetAnimation();
-            this.fadeObj.resetPos();
             this.fadeObj.loaadTransition();
         }else if (this.winPlayer2 && !this.winPlayer1) {
            
-            console.log(haveIt3  + "nose");
             this.pointsPlayer2 += 1;
             this.labelPlayer2.string =  this.pointsPlayer2.toString();
             this.winSound.play();
             this.fadeObj.resetAnimation();
-            this.fadeObj.resetPos();
             this.fadeObj.loaadTransition();
         }
         if(this.winPlayer1 || this.winPlayer2){
             this.touchScreen = false;
             this.endGame();
             this.fadeObj.resetAnimation();
-            this.fadeObj.resetPos();
             this.fadeObj.loaadTransition();
         }
     }
@@ -421,6 +378,10 @@ export default class Board extends cc.Component {
             this.lineSprite.node.runAction(cc.sequence(cc.delayTime(.3), cc.fadeIn(.3)));
             this.lineSprite.node.runAction(cc.sequence(cc.delayTime(1), cc.fadeOut(.3)));
         }
+        this.resetSlots();
+        return;
+    }
+    resetSlots(){
         haveIt2.splice(0,haveIt2.length);
         haveIt.splice(0,haveIt.length);
         this.startCountDownAsync();
@@ -428,7 +389,6 @@ export default class Board extends cc.Component {
         this.winPlayer2 = false;
         this.isPlayer1 = true;
         this.touchedSlots = 0;
-        return;
     }
     resetPoints(){
         this.fadeObj.resetAnimation();
@@ -438,6 +398,7 @@ export default class Board extends cc.Component {
         this.labelPlayer1.string =  this.pointsPlayer1.toString();
         this.labelPlayer2.string =  this.pointsPlayer2.toString();
         this.labelDraws.string =  this.drawsPoints.toString();
+        if(!this.isPlayer2)
         this.isPlayer2 = false;
     }
 

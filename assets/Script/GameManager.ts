@@ -1,7 +1,7 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class GameManager extends cc.Component {
 
     @property(cc.Node)
 	objectGameUI: cc.Node = null
@@ -14,6 +14,8 @@ export default class NewClass extends cc.Component {
     protected particlesPly2: cc.Node;
     @property(cc.Button)
     protected button1: cc.Button;
+    @property(cc.Button)
+    protected button2: cc.Button;
 
 
 	sleep(seconds: number) {
@@ -27,8 +29,8 @@ export default class NewClass extends cc.Component {
     }
     async startCountDownAsync2() {
         await this.sleep(1.1);
-		this.objectHomeUI.active = true;
-		this.objectGameUI.active = false;
+		this.button1.interactable = true;
+        this.button2.interactable = true;
     }
     async enableButtons() {
         await this.sleep(3);
@@ -52,10 +54,13 @@ export default class NewClass extends cc.Component {
 
     gameActive() {
 		this.startCountDownAsync();
+        this.button1.interactable = false;
+        this.button2.interactable = false;
 	}
 
     homeActive() {
-		this.objectHomeUI.active = true;
+        this.startCountDownAsync2();
+        this.objectHomeUI.active = true;
 		this.objectGameUI.active = false;
 	}
 

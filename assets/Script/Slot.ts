@@ -3,17 +3,8 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Slot extends cc.Component {
 
-    @property(cc.Sprite)
-    slotValue: cc.Sprite;
-    @property(Number)
-    slotID: Number = 0;
-    @property(Boolean)
-    bol: Boolean = false;
-    @property(Boolean)
-    isPlayerOne: Boolean = false;
     @property(Boolean)
     isTouched: Boolean = false;
-
 
     //Take a player number and convert to an X or O to display
     /*setValue(x: cc.Texture2D, o: cc.Texture2D, value: number){
